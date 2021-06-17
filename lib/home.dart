@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:upi_mock_app/services/getImage.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -9,6 +10,20 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late String imgurl;
+  final String fallback =
+      "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png";
+
+  void initImageUrl() async {
+    imgurl = await GetImage().getImageFromApi();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initImageUrl();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,7 +167,10 @@ class _HomeState extends State<Home> {
                           onTap: () => {print("hello")},
                           leading: CircleAvatar(
                             backgroundImage: NetworkImage(
-                                "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"),
+                              imgurl == null || imgurl == ''
+                                  ? fallback
+                                  : imgurl,
+                            ),
                           ),
                           title: Text("Contact name"),
                           subtitle: Text("the phone number"),
