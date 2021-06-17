@@ -1,5 +1,7 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:upi_mock_app/main.dart';
 import 'package:upi_mock_app/services/getImage.dart';
 
 class Home extends StatefulWidget {
@@ -11,8 +13,14 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late String imgurl;
+  late CameraController controller;
+  CameraDescription camera = cameras[0];
   final String fallback =
       "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png";
+
+  void initCameraController() {
+    controller = CameraController(camera, ResolutionPreset.high);
+  }
 
   void initImageUrl() async {
     imgurl = await GetImage().getImageFromApi();
@@ -84,6 +92,9 @@ class _HomeState extends State<Home> {
                       Container(
                         height: MediaQuery.of(context).size.height / 1.5,
                         color: Colors.black,
+                        child: controller == null
+                            ? CircularProgressIndicator()
+                            : CameraPreview(controller),
                       ),
                       Positioned.fill(
                         top: -100.0,
