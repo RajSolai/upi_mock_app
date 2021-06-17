@@ -71,9 +71,25 @@ class _HomeState extends State<Home> {
                         color: Colors.black,
                       ),
                       Positioned.fill(
+                        top: -100.0,
                         child: Align(
                           alignment: Alignment.center,
-                          child: Text("hello",style:TextStyle(color: Colors.white)),
+                          child: AnimatedContainer(
+                            duration: Duration(
+                              milliseconds: 2500,
+                            ),
+                            height: 150.0,
+                            width: 150.0,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(10.0),
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 5.0,
+                                style: BorderStyle.solid,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
