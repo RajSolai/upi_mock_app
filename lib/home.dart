@@ -46,16 +46,37 @@ class _HomeState extends State<Home> {
                           fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
                   Padding(
                     padding: EdgeInsets.only(left: 40.0, right: 40.0),
-                    child: TextField(),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Enter UPI Number",
+                        hintStyle: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 30.0,
                   ),
-                  Container(
-                    height: MediaQuery.of(context).size.height / 1.3,
-                    color: Colors.black,
+                  Stack(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height / 1.5,
+                        color: Colors.black,
+                      ),
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text("hello",style:TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -79,7 +100,7 @@ class _HomeState extends State<Home> {
                 ),
                 height: MediaQuery.of(context).size.height * 0.8,
                 child: ListView.builder(
-                  itemCount: 10,
+                  itemCount: 3,
                   controller: scrollController,
                   itemBuilder: (context, index) {
                     if (index == 0) {
@@ -97,12 +118,29 @@ class _HomeState extends State<Home> {
                     if (index == 1) {
                       return Padding(
                         padding: EdgeInsets.only(left: 40.0, right: 40.0),
-                        child: TextField(),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            suffixIcon: Icon(Icons.book),
+                            hintText: "Select Number",
+                            hintStyle: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
                       );
                     } else {
-                      return ListTile(
-                        title: Text("Contact name"),
-                        subtitle: Text("the phone number"),
+                      return Padding(
+                        padding: EdgeInsets.only(left: 20.0),
+                        child: ListTile(
+                          onTap: () => {print("hello")},
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"),
+                          ),
+                          title: Text("Contact name"),
+                          subtitle: Text("the phone number"),
+                        ),
                       );
                     }
                   },
