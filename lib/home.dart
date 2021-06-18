@@ -12,24 +12,30 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late String imgurl;
+  String imgurl = "";
   late CameraController controller;
+  late Future<void> initializeController;
   CameraDescription camera = cameras[0];
   final String fallback =
       "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png";
 
   void initCameraController() {
-    controller = CameraController(camera, ResolutionPreset.high);
+    controller = CameraController(camera, ResolutionPreset.max);
+    initializeController = controller.initialize();
   }
 
   void initImageUrl() async {
-    imgurl = await GetImage().getImageFromApi();
+    String temp = await GetImage().getImageFromApi();
+    setState(() {
+      imgurl = temp;
+    });
   }
 
   @override
   void initState() {
     super.initState();
     initImageUrl();
+    initCameraController();
   }
 
   @override
@@ -87,46 +93,56 @@ class _HomeState extends State<Home> {
                   SizedBox(
                     height: 30.0,
                   ),
-                  Stack(
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height / 1.5,
-                        color: Colors.black,
-                        child: controller == null
-                            ? CircularProgressIndicator()
-                            : CameraPreview(controller),
-                      ),
-                      Positioned.fill(
-                        top: -100.0,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: AnimatedContainer(
-                            duration: Duration(
-                              milliseconds: 2500,
+                  FutureBuilder(
+                    future: initializeController,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return Stack(
+                          children: [
+                            Container(
+                              height: MediaQuery.of(context).size.height / 1.5,
+                              width: MediaQuery.of(context).size.width,
+                              color: Colors.black,
+                              child: CameraPreview(controller),
                             ),
-                            height: 150.0,
-                            width: 150.0,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 5.0,
-                                style: BorderStyle.solid,
+                            Positioned.fill(
+                              top: -100.0,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: AnimatedContainer(
+                                  duration: Duration(
+                                    milliseconds: 2500,
+                                  ),
+                                  height: 200.0,
+                                  width: 200.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 5.0,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ],
+                          ],
+                        );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
             ),
           ),
           DraggableScrollableSheet(
-            initialChildSize: 0.2,
-            minChildSize: 0.2,
+            initialChildSize: 0.23,
+            minChildSize: 0.23,
             maxChildSize: 0.8,
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(
@@ -162,7 +178,7 @@ class _HomeState extends State<Home> {
                         padding: EdgeInsets.only(left: 40.0, right: 40.0),
                         child: TextField(
                           decoration: InputDecoration(
-                            suffixIcon: Icon(Icons.book),
+                            suffixIcon: Icon(Icons.contacts_rounded),
                             hintText: "Select Number",
                             hintStyle: TextStyle(
                               fontSize: 16.0,
@@ -181,6 +197,7 @@ class _HomeState extends State<Home> {
                               imgurl == null || imgurl == ''
                                   ? fallback
                                   : imgurl,
+                              scale: 0.2,
                             ),
                           ),
                           title: Text("Contact name"),
