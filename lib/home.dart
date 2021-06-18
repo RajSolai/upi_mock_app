@@ -194,9 +194,7 @@ class _HomeState extends State<Home> {
                           onTap: () => {print("hello")},
                           leading: CircleAvatar(
                             backgroundImage: NetworkImage(
-                              imgurl == null || imgurl == ''
-                                  ? fallback
-                                  : imgurl,
+                              imgurl == '' ? fallback : imgurl,
                               scale: 0.2,
                             ),
                           ),
@@ -213,5 +211,10 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
+  }
+  @override
+  void dispose() { 
+    controller.dispose();
+    super.dispose();
   }
 }
